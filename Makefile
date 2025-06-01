@@ -1,4 +1,4 @@
-.PHONY: deploy-stable
+.PHONY: deploy-global-s3
 
-deploy-stable:
-	cd stable && terraform apply -auto-approve
+deploy-global-s3:
+	cd global/s3 && terraform init && terraform apply -auto-approve

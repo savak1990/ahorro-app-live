@@ -57,6 +57,11 @@ resource "aws_dynamodb_table" "terraform_state_lock" {
   }
 }
 
+# IMPORTANT
+# When running this script for the first time it's important
+# to comment out terraform declaration, run the script and then
+# uncomment and run again
+#
 terraform {
   backend "s3" {
     bucket         = "ahorro-app-terraform-state"
