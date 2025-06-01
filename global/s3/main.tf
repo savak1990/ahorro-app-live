@@ -65,7 +65,7 @@ resource "aws_dynamodb_table" "terraform_state_lock" {
 terraform {
   backend "s3" {
     bucket         = "ahorro-app-terraform-state"
-    key            = "terraform/state.tfstate"
+    key            = "global/s3/terraform.tfstate"
     region         = "us-east-1"
     dynamodb_table = "ahorro-app-state-lock"
     encrypt        = true
