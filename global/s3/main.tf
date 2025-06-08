@@ -3,10 +3,9 @@ provider "aws" {
 
   default_tags {
     tags = {
-      Environment = "dev"
-      Project     = "ahorro-app"
-      Service     = "ahorro-terraform"
-      Terraform   = "true"
+      Project   = "ahorro-app"
+      Service   = "ahorro-terraform"
+      Terraform = "true"
     }
   }
 }
@@ -70,4 +69,11 @@ terraform {
     dynamodb_table = "ahorro-app-state-lock"
     encrypt        = true
   }
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+  required_version = ">= 1.0"
 }
