@@ -1,4 +1,7 @@
 .PHONY: deploy-global-s3
 
 deploy-global-s3:
-	cd global/s3 && terraform init && terraform apply -auto-approve
+	cd live/global/s3 && terraform init && terraform apply -auto-approve
+
+deploy-global-cert: deploy-global-s3
+	cd live/global/certificate && terraform init && terraform apply -auto-approve

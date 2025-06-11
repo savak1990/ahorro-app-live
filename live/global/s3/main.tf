@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-east-1"
+  region = "eu-west-1"
 
   default_tags {
     tags = {
@@ -11,7 +11,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "ahorro-app-terraform-state"
+  bucket = "ahorro-app-state"
 
   lifecycle {
     prevent_destroy = true
@@ -63,9 +63,9 @@ resource "aws_dynamodb_table" "terraform_state_lock" {
 #
 terraform {
   backend "s3" {
-    bucket         = "ahorro-app-terraform-state"
+    bucket         = "ahorro-app-state"
     key            = "global/s3/terraform.tfstate"
-    region         = "us-east-1"
+    region         = "eu-west-1"
     dynamodb_table = "ahorro-app-state-lock"
     encrypt        = true
   }

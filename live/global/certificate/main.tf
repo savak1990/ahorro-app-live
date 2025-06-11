@@ -1,31 +1,5 @@
 provider "aws" {
-  region = "us-east-1"
-
-  default_tags {
-    tags = {
-      Project   = "ahorro-app"
-      Service   = "ahorro-terraform"
-      Terraform = "true"
-    }
-  }
-}
-
-provider "aws" {
-  region = "eu-central-1"
-  alias  = "eu-central-1"
-
-  default_tags {
-    tags = {
-      Project   = "ahorro-app"
-      Service   = "ahorro-terraform"
-      Terraform = "true"
-    }
-  }
-}
-
-provider "aws" {
-  region = "ap-south-1"
-  alias  = "ap-south-1"
+  region = "eu-west-1"
 
   default_tags {
     tags = {
@@ -37,7 +11,7 @@ provider "aws" {
 }
 
 locals {
-  app_name          = "ahorro-app"
+  app_name          = "ahorro-app-secrets"
   ahorro_app_secret = jsondecode(data.aws_secretsmanager_secret_version.ahorro_app.secret_string)
   domain_name       = local.ahorro_app_secret["domain_name"]
 }
@@ -58,27 +32,7 @@ data "aws_route53_zone" "this" {
 }
 
 # Create ACM certificate for the domain (wildcard)
-resource "aws_acm_certificate" "us_certificate" {
-  domain_name       = "*.${local.domain_name}"
-  validation_method = "DNS"
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_acm_certificate" "eu_certicate" {
-  provider          = aws.eu-central-1
-  domain_name       = "*.${local.domain_name}"
-  validation_method = "DNS"
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_acm_certificate" "ap_certificate" {
-  provider          = aws.ap-south-1
+resource "aws_acm_certificate" "single" {
   domain_name       = "*.${local.domain_name}"
   validation_method = "DNS"
 
@@ -90,7 +44,7 @@ resource "aws_acm_certificate" "ap_certificate" {
 # Create DNS validation records for ACM
 resource "aws_route53_record" "validation" {
   for_each = {
-    for dvo in aws_acm_certificate.us_certificate.domain_validation_options : dvo.domain_name => {
+    for dvo in aws_acm_certificate.single.domain_validation_options : dvo.domain_name => {
       name  = dvo.resource_record_name
       type  = dvo.resource_record_type
       zone  = data.aws_route53_zone.this.id
@@ -107,9 +61,9 @@ resource "aws_route53_record" "validation" {
 
 terraform {
   backend "s3" {
-    bucket         = "ahorro-app-terraform-state"
+    bucket         = "ahorro-app-state"
     key            = "global/certificate/terraform.tfstate"
-    region         = "us-east-1"
+    region         = "eu-west-1"
     dynamodb_table = "ahorro-app-state-lock"
     encrypt        = true
   }
