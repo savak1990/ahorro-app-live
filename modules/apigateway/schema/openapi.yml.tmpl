@@ -257,16 +257,33 @@ components:
           type: string
         title:
           type: string
+          required: true
         content:
           type: string
         priority:
           type: integer
-        created:
-          type: string
-          format: date-time
-        updated:
-          type: string
-          format: date-time
         due:
           type: string
           format: date-time
+
+x-amazon-apigateway-request-validators:
+  validate-all:
+    validateRequestBody: true
+    validateRequestParameters: true
+x-amazon-apigateway-request-validator: FullRequestValidator
+x-amazon-apigateway-gateway-responses:
+  ACCESS_DENIED:
+    responseTemplates:
+      application/json: '{"code":"APIGW_ERROR","message":"$context.authorizer.customErrorMessage","requestId":"$context.requestId"}'
+  BAD_REQUEST_BODY:
+    responseTemplates:
+      application/json: '{"code":"APIGW_ERROR","message":"$context.error.message: $context.error.validationErrorString","requestId":"$context.requestId"}'
+  DEFAULT_4XX:
+    responseTemplates:
+      application/json: '{"code":"APIGW_ERROR","message":"$context.error.message","requestId":"$context.requestId"}'
+  DEFAULT_5XX:
+    responseTemplates:
+      application/json: '{"code":"APIGW_ERROR","message":"$context.error.message","requestId":"$context.requestId"}'
+  UNAUTHORIZED:
+    responseTemplates:
+      application/json: '{"code":"APIGW_ERROR","message":"$context.error.message","requestId":"$context.requestId"}'
