@@ -24,6 +24,10 @@ resource "aws_api_gateway_rest_api" "this" {
   name        = "${var.api_name}-rest-api"
   description = "REST API for ${var.api_name}"
   body        = local.openapi_spec
+
+  endpoint_configuration {
+    types = ["REGIONAL"]
+  }
 }
 
 resource "aws_api_gateway_deployment" "this" {
@@ -45,10 +49,6 @@ resource "aws_api_gateway_stage" "this" {
 resource "aws_api_gateway_domain_name" "this" {
   domain_name              = var.domain_name
   regional_certificate_arn = var.certificate_arn
-
-  endpoint_configuration {
-    types = ["REGIONAL"]
-  }
 
   security_policy = "TLS_1_2"
 }
