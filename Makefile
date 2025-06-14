@@ -5,3 +5,6 @@ deploy-global-s3:
 
 deploy-global-cert: deploy-global-s3
 	cd live/global/certificate && terraform init && terraform apply -auto-approve
+
+deploy-stable-cognito:
+	cd live/stable/cognito && terraform init && terraform apply -auto-approve

@@ -3,9 +3,10 @@ provider "aws" {
 
   default_tags {
     tags = {
-      Project   = "ahorro-app"
-      Service   = "ahorro-terraform"
-      Terraform = "true"
+      Environment = "global"
+      Project     = "ahorro-app"
+      Service     = "ahorro-terraform"
+      Terraform   = "true"
     }
   }
 }
