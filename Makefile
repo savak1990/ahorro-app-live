@@ -3,6 +3,9 @@
 deploy-global-s3:
 	cd live/global/s3 && terraform init && terraform apply -auto-approve
 
+deploy-global-s3-artifacts:
+	cd live/global/s3-artifacts && terraform init && terraform apply -auto-approve
+
 deploy-global-cert: deploy-global-s3
 	cd live/global/certificate && terraform init && terraform apply -auto-approve
 
