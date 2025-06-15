@@ -11,6 +11,20 @@ provider "aws" {
   }
 }
 
+provider "aws" {
+  region = "us-east-1"
+  alias  = "us-east-1"
+
+  default_tags {
+    tags = {
+      Environment = "global"
+      Project     = "ahorro-app"
+      Service     = "ahorro-terraform"
+      Terraform   = "true"
+    }
+  }
+}
+
 locals {
   app_name          = "ahorro-app-secrets"
   ahorro_app_secret = jsondecode(data.aws_secretsmanager_secret_version.ahorro_app.secret_string)
@@ -58,6 +72,17 @@ resource "aws_route53_record" "validation" {
   zone_id = each.value.zone
   ttl     = 60
   records = [each.value.value]
+}
+
+# Create ACM certificate for the domain (wildcard) in us-east-1
+resource "aws_acm_certificate" "single_us_east_1" {
+  provider          = aws.us-east-1
+  domain_name       = "*.${local.domain_name}"
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 terraform {
