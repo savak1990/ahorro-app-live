@@ -10,8 +10,7 @@
   - Amplify library on client
 - **Microservices:**
   - Users Service (APIGW + Lambda + AWS Aurora PostreSQL)
-  - Transactions (APIGW + Lambda + DynamoDb)
-  - Categories (CloudFront + S3 + Static Json)
+  - Transactions (APIGW + Lambda + AWS Aurora PostgreSQL + Dynamo DB)
   - Analytics (Athena, Redshift, Clickhouse???)
 - **Message Broker:**
   - MSK Serverless (Kafka)
