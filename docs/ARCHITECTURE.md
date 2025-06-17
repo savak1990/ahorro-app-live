@@ -94,10 +94,10 @@ Manage users, groups and balances.
 Manages all user transactions, their detailed entries, balances of the user and per-user category prioritization.
 
 Below diagram shows is that ideal solution that is not going to be implemented now. The solution provides eventual consistency guarantees between write and read flows but works well for high latency and huge throughput and also scales horisontally.
-![Ideal Transactions Flow Diagram](docs/transactions_ideal_arch.jpg)
+![Ideal Transactions Flow Diagram](./transactions_ideal_arch.jpg)
 
 The solution that will be implemented now is very simple and looks like this:
-![Solution to start with](docs/transactions_arch.jpg)
+![Solution to start with](./transactions_arch.jpg)
 
 - **Language:** Go
 - **API:** REST (OpenAPI)
