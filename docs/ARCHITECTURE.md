@@ -34,7 +34,7 @@
 ## Microservice Architecture
 
 ### Users Service
-Manage users, groups and balances.
+The bounded context of thi service are users, groups, balances and group membership.
 - **Language:** Go
 - **API:** REST (OpenAPI)
 - **Deployment:** Route53 + API Gateway + Lambda in VPC
@@ -59,12 +59,20 @@ Manage users, groups and balances.
     - `GET /groups/{group_id}/invites` - list pending invites
     - `GET /groups/{group_id}/members` - list group members
     - `DELETE /groups/{group_id}/members/{user_id}` - remove user from group
+  - Balance APIs
+    - `GET /users/{user_id}/balances/{balance_id}` - list all balances for the user
+    - `GET /users/{user_id}/balances` - list all balances for the user
+    - `GET /groups/{group_id}/balances` - list all balances for all group members
+    - `POST /users/{user_id}/balances/{user_id}` - create new balance for the user
+    - `PUT /users/{user_id}/balances/{balance_id}` - udpate balance information
+    - `DELETE /users/{user_id}/balances/{balance_id}` - delete balance information
 - **Database:**
   - RDS (PostgreSQL)
     - `users` (user_id [PK], email, name, created_at, updated_at, status)
-    - `groups` (group_id [PK], name, owner_id [FK->users], created_at, updated_at)
+    - `groups` (group_id [PK], name, created_at, updated_at)
     - `group_members` (group_id [FK->groups], user_id [FK->users], role, joined_at, PRIMARY KEY (group_id, user_id))
     - `invites` (invite_id [PK], group_id [FK->groups], inviter_id [FK->users], invitee_email, invite_code, status, created_at, accepted_at)
+    - `balances` (balance_id [PK], user_id [FK->users], name, description, currency, created_at, updated_at)
     - `outbox` (id [PK], event_type, payload (JSON), status, created_at, sent_at)
 - **Produces:**
   - Kafka events
@@ -106,13 +114,6 @@ The solution that will be implemented now is very simple and looks like this:
   - Dynamo DB for categories
 - **Authentication:** Cognito JWT
 - **Endpoints:**
-  - Balance APIs
-    - `GET /balances/{balance_id}` - list all balances for the user
-    - `GET /balances/{user_id}` - list all balances for the user
-    - `GET /balances/{group_id}` - list all balances for all group members
-    - `POST /balances/{user_id}` - create new balance for the user
-    - `PUT /balances/{balance_id}` - udpate balance information
-    - `DELETE /balances/{balance_id}` - delete balance information
   - Transactions APIs
     - `POST /transactions` - create a new transaction
     - `GET /transactions` - list transactions for the user
@@ -123,16 +124,8 @@ The solution that will be implemented now is very simple and looks like this:
     - `GET /categories/{user_id}` - returns the list of categories for the user, sorted by their personalized score
 - **Transactions Fetch APIs:**
   - Various GET filtering and sorting should be supported with Pagination
-    - `GET /transactions?user_id=X&type=income&category=Y&sorted_by=transacted_at` 
+    - `GET /transactions?user_id=X&type=expenses&category=Y&sorted_by=transacted_at&count=N&startFrom=ID` 
 - **Database (PostgreSQL, Aurora V2):**
-  - **balances**
-    - `balance_id` UUID PRIMARY KEY
-    - `user_id` UUID NOT NULL -- not a foreign key
-    - `group_id` UUID NOT NULL -- not a foreign key
-    - `amount` NUMERIC(18,2) NOT NULL
-    - `currency` VARCHAR(8) NOT NULL
-    - `created_at` TIMESTAMPTZ NOT NULL
-    - `updated_at` TIMESTAMPTZ NOT NULL
   - **transactions**
     - `transaction_id` UUID PRIMARY KEY
     - `user_id` UUID NOT NULL -- not a foreign key
