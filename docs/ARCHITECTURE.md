@@ -98,7 +98,7 @@ The bounded context of thi service are users, groups, balances and group members
     - Strong consistency for invites (recommended)
 
 ### Transactions Service
-Manages all user transactions, their detailed entries, balances of the user and per-user category prioritization.
+Manages all user transactions and per-user category prioritization.
 
 Below diagram shows is that ideal solution that is not going to be implemented now. The solution provides eventual consistency guarantees between write and read flows but works well for high latency and huge throughput and also scales horisontally.
 ![Ideal Transactions Flow Diagram](./transactions_ideal_arch.jpg)
@@ -110,7 +110,7 @@ The solution that will be implemented now is very simple and looks like this:
 - **API:** REST (OpenAPI)
 - **Deployment:** Route53 + API Gateway + Lambda
 - **Data Store:** 
-  - AWS Aurora V2 + PostgreSql for transactions and balances
+  - AWS Aurora V2 + PostgreSql for transactions
   - Dynamo DB for categories
 - **Authentication:** Cognito JWT
 - **Endpoints:**
@@ -132,9 +132,10 @@ The solution that will be implemented now is very simple and looks like this:
     - `group_id` UUID NOT NULL -- not a foreign key
     - `type` VARCHAR(16) NOT NULL -- expense, income, movement
     - `amount` NUMERIC(18,2) NOT NULL
-    - `from_balance_id` UUID NOT NULL -- always the source (from) balance
+    - `balance_id` UUID -- source balance for expense and income types
+    - `from_balance_id` UUID -- for movement only, source balance
     - `to_balance_id` UUID -- for movement only, destination balance
-    - `category_id` UUID
+    - `category` VARCHAR(20)
     - `description` TEXT
     - `approved_at` TIMESTAMPTZ
     - `transacted_at` TIMESTAMPTZ NOT NULL
