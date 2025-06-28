@@ -28,9 +28,50 @@ provider "aws" {
   }
 }
 
+provider "aws" {
+  region = "us-east-1"
+  alias  = "us-east-1"
+
+  default_tags {
+    tags = {
+      Environment = "stable"
+      Project     = "ahorro-app"
+      Service     = "cognito"
+      Terraform   = "true"
+    }
+  }
+}
+
+data "aws_acm_certificate" "cert" {
+  provider    = aws.us-east-1
+  domain      = "*.${local.domain_name}"
+  statuses    = ["ISSUED"]
+  most_recent = true
+}
+
+data "aws_secretsmanager_secret" "ahorro_app" {
+  name = local.secret_name
+}
+
+data "aws_secretsmanager_secret_version" "ahorro_app" {
+  secret_id = data.aws_secretsmanager_secret.ahorro_app.id
+}
+
+data "aws_route53_zone" "public" {
+  name = local.domain_name
+}
+
+locals {
+  secret_name = "ahorro-app-secrets"
+  domain_name = jsondecode(data.aws_secretsmanager_secret_version.ahorro_app.secret_string)["domain_name"]
+}
+
 module "cognito" {
   source = "../../../../ahorro-shared/terraform/cognito"
 
   user_pool_name        = "ahorro-app-stable-user-pool"
   user_pool_client_name = "ahorro-app-stable-client"
+  user_pool_fqdn        = "api-ahorro-auth-stable.${local.domain_name}"
+  zone_id               = data.aws_route53_zone.public.id
+  acm_certificate_arn   = data.aws_acm_certificate.cert.arn
 }
