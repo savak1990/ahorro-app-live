@@ -176,11 +176,35 @@ resource "aws_iam_policy" "ahorro_development_policy" {
         ]
         Resource = "*"
       },
-      # Cognito for ahorro user pools
+      # Cognito listing operations (needed for Makefile dynamic lookup)
       {
         Effect = "Allow"
         Action = [
-          "cognito-idp:*"
+          "cognito-idp:ListUserPools",
+          "cognito-idp:ListUserPoolClients",
+          "cognito-idp:DescribeUserPool",
+          "cognito-idp:DescribeUserPoolClient"
+        ]
+        Resource = "*"
+        Condition = {
+          StringLike = {
+            "aws:RequestedRegion" = "eu-west-1"
+          }
+        }
+      },
+      # Cognito authentication and management for ahorro user pools
+      {
+        Effect = "Allow"
+        Action = [
+          "cognito-idp:InitiateAuth",
+          "cognito-idp:CreateUser",
+          "cognito-idp:UpdateUser",
+          "cognito-idp:DeleteUser",
+          "cognito-idp:AdminCreateUser",
+          "cognito-idp:AdminUpdateUser",
+          "cognito-idp:AdminDeleteUser",
+          "cognito-idp:AdminSetUserPassword",
+          "cognito-idp:AdminResetUserPassword"
         ]
         Resource = "arn:aws:cognito-idp:*:*:userpool/*"
         Condition = {
