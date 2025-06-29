@@ -11,9 +11,4 @@
 - [Terraform](https://www.terraform.io/downloads.html)
 - AWS CLI configured with appropriate credentials
 
-### Deploying an Environment
-
-To deploy the `global-s3` environment:
-
-```bash
-make deploy-global-s3
+### Deploying commands
