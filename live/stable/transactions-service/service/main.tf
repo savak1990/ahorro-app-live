@@ -86,7 +86,7 @@ locals {
   app_lambda_name = "${local.base_name}-app-lambda"
 
   # Version (don't forget to change module source to the same timestamp to be in sync)
-  version                 = "build-250704-2155"
+  version                 = "build-250704-2221"
   app_s3_bucket_name      = "ahorro-artifacts"
   app_s3_artifact_zip_key = "transactions/${local.version}/transactions-lambda.zip"
   full_api_name           = "api-${local.base_name}"
