@@ -80,7 +80,7 @@ locals {
 }
 
 module "stable_transactions_db" {
-  source = "github.com/savak1990/ahorro-transactions-service//terraform/database?ref=build-250705-1506"
+  source = "github.com/savak1990/ahorro-transactions-service//terraform/database?ref=build-250707-1556"
 
   db_identifier   = local.db_identifier
   db_name         = local.db_name
