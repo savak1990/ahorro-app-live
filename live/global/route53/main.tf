@@ -48,7 +48,7 @@ locals {
 
 resource "aws_route53_record" "parent_a" {
   zone_id = data.aws_route53_zone.public.zone_id
-  name    = "vkdev1.com"
+  name    = local.domain_name
   type    = "A"
   ttl     = 300
   records = ["1.1.1.1"]
