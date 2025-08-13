@@ -86,7 +86,7 @@ locals {
   app_lambda_name = "${local.base_name}-app-lambda"
 
   # Version (don't forget to change module source to the same timestamp to be in sync)
-  version                 = "build-250812-2208"
+  version                 = "build-250813-1613"
   app_s3_bucket_name      = "ahorro-artifacts"
   app_s3_artifact_zip_key = "transactions/${local.version}/transactions-lambda.zip"
   full_api_name           = "api-${local.base_name}"
@@ -103,7 +103,7 @@ locals {
 }
 
 module "ahorro_transactions_service" {
-  source = "github.com/savak1990/ahorro-transactions-service//terraform/service?ref=build-250812-2208"
+  source = "github.com/savak1990/ahorro-transactions-service//terraform/service?ref=build-250813-1613"
 
   # VPC Configuration
   vpc_id            = local.vpc_id
