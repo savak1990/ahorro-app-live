@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket         = "ahorro-app-state"
-    key            = "stable/exchangerate-cooker/stable/terraform.tfstate"
+    key            = "stable/exchangerate-cooker/terraform.tfstate"
     region         = "eu-west-1"
     dynamodb_table = "ahorro-app-state-lock"
     encrypt        = true
