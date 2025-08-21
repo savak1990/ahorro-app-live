@@ -50,7 +50,7 @@ locals {
 
 # Main exchange rate cooker module
 module "exchange_rate_cooker" {
-  source = "git::https://github.com/savak1990/ahorro-exchangerate-cooker.git//terraform?ref=v1.0.1"
+  source = "git::https://github.com/savak1990/ahorro-exchangerate-cooker.git//terraform?ref=v1.0.2"
 
   base_name               = local.base_name
   app_s3_bucket_name      = local.s3_bucket_name
