@@ -50,7 +50,7 @@ locals {
 
 # Main exchange rate cooker module
 module "exchange_rate_cooker" {
-  source = "git::https://github.com/savak1990/ahorro-exchangerate-cooker.git//terraform?ref=v1.0.0"
+  source = "git::https://github.com/savak1990/ahorro-exchangerate-cooker.git//terraform?ref=v1.0.1"
 
   base_name               = local.base_name
   app_s3_bucket_name      = local.s3_bucket_name
@@ -59,4 +59,5 @@ module "exchange_rate_cooker" {
   schedule_expression     = "cron(10 0 * * ? *)" // Once a day at 00:10 UTC
   #schedule_expression  = "rate(5 minutes)" // Every 5 minutes for testing
   supported_currencies = ["USD", "JPY", "CAD", "AUD", "CNY", "EUR", "GBP", "CHF", "SEK", "NOK", "DKK", "PLN", "CZK", "HUF", "RON", "UAH", "BYN", "RUB"]
+  ttl_interval_days    = 30
 }
